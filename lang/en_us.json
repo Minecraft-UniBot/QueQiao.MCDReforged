@@ -15,5 +15,7 @@
 	"queqiao_mcdr.status.server_name": "§7Server Name: §f{}",
 	"queqiao_mcdr.status.players": "§7Players: §f{}",
 	"queqiao_mcdr.status.cpu": "§7CPU: §f{}",
-	"queqiao_mcdr.status.memory": "§7Memory: §f{}"
+	"queqiao_mcdr.status.memory": "§7Memory: §f{}",
+	"queqiao_mcdr.status.max_players": "§7Max Players: §f{}",
+	"queqiao_mcdr.status.motd": "§7MOTD: §f{}"
 }

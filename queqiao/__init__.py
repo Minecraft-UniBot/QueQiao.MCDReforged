@@ -12,10 +12,11 @@ from mcdreforged.api.all import (
 from typing import Any, Optional
 
 from queqiao.config import Config, load_config
-from queqiao.websocket_manager import QueQiaoConnection
-from queqiao.game_events import GameEventForwarder
-from queqiao.api_handler import ApiHandler
-from queqiao import server_status as server_status_module
+from queqiao.websocket import QueQiaoConnection
+from queqiao.events import GameEventForwarder
+from queqiao.handler import ApiHandler
+from queqiao import status
+from queqiao import ping
 
 # 全局实例（命名避免与子模块冲突）
 plugin_config: Optional[Config] = None
@@ -120,14 +121,14 @@ def _show_status(source: CommandSource):
 	mode_str = '+'.join(mode) if mode else '未启用'
 
 	client_status = '已连接' if conn.is_client_connected else '未连接'
-	server_status = f'{conn.server_client_count} 个客户端'
+	client_count_str = f'{conn.server_client_count} 个客户端'
 
 	# 玩家数（通过 online_player_api 插件获取）
-	player_count = server_status_module.get_player_count(server)
+	player_count = status.get_player_count(server)
 
 	# CPU 与内存（基于 psutil 采集服务器进程，对齐 QueQiao V2 协议）
-	cpu_info = server_status_module.get_cpu_information(server)
-	mem_info = server_status_module.get_memory_information(server)
+	cpu_info = status.get_cpu_information(server)
+	mem_info = status.get_memory_information(server)
 
 	# CPU 显示：优先进程占用，回退系统占用
 	process_load = cpu_info.get('process_load', 0.0)
@@ -142,15 +143,27 @@ def _show_status(source: CommandSource):
 	percentage = physical.get('percentage', 0.0)
 	mem_str = f'{used_mb:.0f} / {total_mb:.0f} MB ({percentage:.1f}%)'
 
+	# MOTD（通过 Server List Ping 获取最大玩家数和描述）
+	ping = ping.get_server_list_ping(
+		server,
+		host=cfg.minecraft_host or None,
+		port=cfg.minecraft_port or None,
+	)
+	max_players = ping.get('players', {}).get('max', -1)
+	description = ping.get('description') or 'N/A'
+	max_str = str(max_players) if max_players and max_players >= 0 else 'N/A'
+
 	lines = [
 		server.tr('queqiao_mcdr.status.title'),
 		server.tr('queqiao_mcdr.status.mode', mode_str),
 		server.tr('queqiao_mcdr.status.server_name', cfg.server_name),
 		server.tr('queqiao_mcdr.status.client', client_status),
-		server.tr('queqiao_mcdr.status.server', server_status),
+		server.tr('queqiao_mcdr.status.server', client_count_str),
 		server.tr('queqiao_mcdr.status.players', player_count),
 		server.tr('queqiao_mcdr.status.cpu', cpu_str),
 		server.tr('queqiao_mcdr.status.memory', mem_str),
+		server.tr('queqiao_mcdr.status.max_players', max_str),
+		server.tr('queqiao_mcdr.status.motd', description),
 	]
 	_reply_lines(source, lines)
 
@@ -171,8 +184,9 @@ def _init_components(server: PluginServerInterface, conn: QueQiaoConnection):
 
 
 def _on_server_state_change(server: PluginServerInterface, *args, **kwargs):
-	'''服务器启动/停止时清理 CPU 采样缓存'''
-	server_status_module.reset_cpu_cache()
+	'''服务器启动/停止时清理 CPU 采样缓存和 ping 缓存'''
+	status.reset_cpu_cache()
+	ping.clear_ping_cache()
 
 
 def _reload(source: CommandSource):

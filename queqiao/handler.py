@@ -9,7 +9,8 @@ from typing import Any
 from mcdreforged.api.all import PluginServerInterface
 
 from queqiao.config import Config
-from queqiao import server_status as server_status_module
+from queqiao import status
+from queqiao import ping
 
 
 class ApiHandler:
@@ -150,47 +151,72 @@ class ApiHandler:
 			'timestamp': int(time.time() * 1000),
 		}
 
-		# 服务器基础信息
+		# server_list_ping（通过 MC Server List Ping 协议获取真实 MOTD）
 		try:
-			info = self.server.get_server_information()
-			status_data['server_type'] = 'mcdr'
-			status_data['server_version'] = getattr(info, 'version', None)
-		except Exception:
-			status_data['server_type'] = 'mcdr'
-			status_data['server_version'] = None
+			ping_result = ping.get_server_list_ping(
+				self.server,
+				host=self.config.minecraft_host or None,
+				port=self.config.minecraft_port or None,
+			)
+			# 用 online_player_api 的实时玩家数覆盖 ping 返回的 online（更准确）
+			players = status.get_online_players(self.server)
+			ping_result['players']['online'] = len(players)
+			status_data['server_list_ping'] = ping_result
+		except Exception as e:
+			self.server.logger.debug(f'[QueQiao] Server List Ping 失败: {e}')
+			# 回退：用已知信息填充
+			try:
+				info = self.server.get_server_information()
+				players = status.get_online_players(self.server)
+				status_data['server_list_ping'] = {
+					'available': self.server.is_server_running(),
+					'host': getattr(info, 'ip', None),
+					'port': getattr(info, 'port', None),
+					'reason': 'ping failed',
+					'error': str(e),
+					'version': {'name': None, 'protocol': None},
+					'players': {'max': -1, 'online': len(players)},
+					'description': None,
+					'favicon': None,
+					'enforcesSecureChat': None,
+				}
+			except Exception:
+				status_data['server_list_ping'] = {
+					'available': False,
+					'host': None,
+					'port': None,
+					'reason': 'ping failed',
+					'error': str(e),
+					'version': {'name': None, 'protocol': None},
+					'players': {'max': -1, 'online': 0},
+					'description': None,
+					'favicon': None,
+					'enforcesSecureChat': None,
+				}
 
-		# server_list_ping（MCDR 端无法做真实 ping，用已知信息填充）
+		# 服务器基础信息（MC 版本优先用 MCDR 解析值，为空时回退到 ping 的 version.name）
 		try:
 			info = self.server.get_server_information()
-			players = server_status_module.get_online_players(self.server)
-			status_data['server_list_ping'] = {
-				'available': self.server.is_server_running(),
-				'host': getattr(info, 'ip', None),
-				'port': getattr(info, 'port', None),
-				'reason': 'ok' if self.server.is_server_running() else 'server not running',
-				'error': None,
-				'players': {
-					'max': -1,  # MCDR 端无法获取最大玩家数
-					'online': len(players),
-				},
-				'description': None,
-				'favicon': None,
-			}
+			status_data['server_type'] = 'mcdr'
+			mc_version = getattr(info, 'version', None)
+			if not mc_version:
+				# MCDR 未解析到版本，用 ping 返回的版本名
+				ping_version = status_data.get('server_list_ping', {}).get('version', {}).get('name')
+				mc_version = ping_version
+			status_data['server_version'] = mc_version
 		except Exception:
-			status_data['server_list_ping'] = {
-				'available': False,
-				'players': {'max': -1, 'online': 0},
-			}
+			status_data['server_type'] = 'mcdr'
+			status_data['server_version'] = status_data.get('server_list_ping', {}).get('version', {}).get('name')
 
 		# CPU 信息
 		try:
-			status_data['cpu_information'] = server_status_module.get_cpu_information(self.server)
+			status_data['cpu_information'] = status.get_cpu_information(self.server)
 		except Exception as e:
 			self.server.logger.debug(f'[QueQiao] CPU 信息采集失败: {e}')
 
 		# 内存信息
 		try:
-			status_data['memory_information'] = server_status_module.get_memory_information(self.server)
+			status_data['memory_information'] = status.get_memory_information(self.server)
 		except Exception as e:
 			self.server.logger.debug(f'[QueQiao] 内存信息采集失败: {e}')
 

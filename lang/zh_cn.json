@@ -15,5 +15,7 @@
 	"queqiao_mcdr.status.server_name": "§7服务器名: §f{}",
 	"queqiao_mcdr.status.players": "§7在线玩家: §f{}",
 	"queqiao_mcdr.status.cpu": "§7CPU 占用: §f{}",
-	"queqiao_mcdr.status.memory": "§7内存占用: §f{}"
+	"queqiao_mcdr.status.memory": "§7内存占用: §f{}",
+	"queqiao_mcdr.status.max_players": "§7最大玩家: §f{}",
+	"queqiao_mcdr.status.motd": "§7MOTD: §f{}"
 }

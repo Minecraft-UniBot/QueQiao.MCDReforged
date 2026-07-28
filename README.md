@@ -56,6 +56,10 @@ uv sync
   "server_name": "MCDR",
   "access_token": "",
   "client_origin": "mcdr",
+  "minecraft": {
+    "host": "",
+    "port": 0
+  },
   "client": {
     "enable": false,
     "url": "ws://127.0.0.1:8080/minecraft/ws",
@@ -70,6 +74,10 @@ uv sync
   "log_events": true
 }
 ```
+
+### Minecraft 服务器地址
+
+`minecraft.host` / `minecraft.port` 用于 Server List Ping 获取 MOTD、最大玩家数等信息。留空则自动从 MCDR 解析的服务器信息获取，解析不到时回退 `127.0.0.1:25565`。若 MCDR 无法正确解析端口（如非标准端口），请手动填写。
 
 ### 客户端模式
 

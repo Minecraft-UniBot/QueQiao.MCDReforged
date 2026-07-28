@@ -6,7 +6,7 @@ QueQiao MCDR 插件 - 游戏事件转发
 from mcdreforged.api.all import PluginServerInterface, MCDRPluginEvents, Info
 
 from queqiao.config import Config
-from queqiao.websocket_manager import QueQiaoConnection
+from queqiao.websocket import QueQiaoConnection
 from queqiao.schema import EventBuilder
 
 

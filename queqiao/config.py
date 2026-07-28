@@ -10,6 +10,12 @@ DEFAULT_CONFIG = {
 	'server_name': 'MCDR',
 	'access_token': '',
 	'client_origin': 'mcdr',
+	'minecraft': {
+		# Minecraft 服务器地址，用于 Server List Ping 获取 MOTD/最大玩家数
+		# 留空则自动从 MCDR 解析的服务器信息获取，解析不到时回退 127.0.0.1:25565
+		'host': '',
+		'port': 0
+	},
 	'client': {
 		'enable': False,
 		'url': 'ws://127.0.0.1:8080/minecraft/ws',
@@ -29,7 +35,7 @@ class Config:
 	def __init__(self, data: dict):
 		self._data = {**DEFAULT_CONFIG, **data}
 		# merge nested dicts
-		for key in ('client', 'server'):
+		for key in ('minecraft', 'client', 'server'):
 			if key in data and isinstance(data[key], dict):
 				self._data[key] = {**DEFAULT_CONFIG.get(key, {}), **data[key]}
 
@@ -44,6 +50,16 @@ class Config:
 	@property
 	def client_origin(self) -> str:
 		return self._data.get('client_origin', 'mcdr')
+
+	@property
+	def minecraft_host(self) -> str:
+		'''Minecraft 服务器地址（用于 Server List Ping），空则自动解析'''
+		return self._data.get('minecraft', {}).get('host', '') or ''
+
+	@property
+	def minecraft_port(self) -> int:
+		'''Minecraft 服务器端口（用于 Server List Ping），0 则自动解析'''
+		return self._data.get('minecraft', {}).get('port', 0) or 0
 
 	@property
 	def client_enable(self) -> bool:
