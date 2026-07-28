@@ -2,6 +2,14 @@
 
 A MCDReforged plugin bridging the **QueQiao V2 protocol**, supporting both forward WebSocket (client) and reverse WebSocket (server) connection modes for real-time message exchange between a Minecraft server and external systems (e.g. NoneBot / QueQiao server).
 
+## 📖 Compatible Projects
+
+This plugin follows the QueQiao V2 protocol and can interoperate with:
+
+- [UniBot](https://github.com/MineJPGcraft/UniBot) — A cross-platform Minecraft bot; this plugin serves as its MCDR endpoint
+- [nonebot-adapter-minecraft](https://github.com/17TheWord/nonebot-adapter-minecraft) — A NoneBot adapter for Minecraft that communicates with this plugin via the QueQiao protocol
+- [QueQiao](https://github.com/17TheWord/QueQiao) — The official QueQiao protocol implementation
+
 ## ✨ Features
 
 ### Connection
@@ -69,6 +77,6 @@ uv run python -m mcdreforged pack
 | [Minecraft Data API](https://mcdreforged.com/en/plugin/minecraft_data_api) | Player coords, health, XP level | ✅ |
 | [online_player_api](https://mcdreforged.com/en/plugin/online_player_api) | Online player list | ⚠️ Optional (falls back to MCDR built-in API if missing) |
 
-## 📄 License
+## �📄 License
 
 [MIT](./LICENSE)

@@ -2,6 +2,14 @@
 
 基于 MCDReforged 的**鹊桥 V2 协议**对接插件，支持**正向 WebSocket（客户端）**与**反向 WebSocket（服务端）**两种连接方式，实现 Minecraft 服务端与外部系统（如 NoneBot / 鹊桥服务端）的实时消息互通。
 
+## 📖 对接项目
+
+本插件遵循鹊桥 V2 协议，可与以下项目对接：
+
+- [UniBot](https://github.com/MineJPGcraft/UniBot) — Minecraft 跨平台机器人框架，本插件为其 MCDR 端实现
+- [nonebot-adapter-minecraft](https://github.com/17TheWord/nonebot-adapter-minecraft) — NoneBot 的 Minecraft 适配器，通过鹊桥协议与本插件互通
+- [鹊桥项目](https://github.com/17TheWord/QueQiao) — 鹊桥协议官方实现
+
 ## ✨ 功能特性
 
 ### 连接能力
@@ -69,6 +77,6 @@ uv run python -m mcdreforged pack
 | [Minecraft Data API](https://mcdreforged.com/zh-CN/plugin/minecraft_data_api) | 玩家坐标、生命值、经验等级 | ✅ |
 | [online_player_api](https://mcdreforged.com/zh-CN/plugin/online_player_api) | 在线玩家列表 | ⚠️ 可选（缺失时回退 MCDR 内置接口） |
 
-## 📄 License
+## �📄 License
 
 [MIT](./LICENSE)

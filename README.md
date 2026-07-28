@@ -168,10 +168,11 @@ uv run python -m mcdreforged pack
 uv run python -c "import queqiao"
 ```
 
-## 📚 参考
+## 📚 对接
 
-- [鹊桥项目](https://github.com/17TheWord/QueQiao)
-- [MCDReforged 文档](https://docs.mcdreforged.com/)
+- [UniBot](https://github.com/MineJPGcraft/UniBot) — Minecraft 跨平台机器人，本插件为其 MCDR 端实现
+- [nonebot-adapter-minecraft](https://github.com/17TheWord/nonebot-adapter-minecraft) — NoneBot 的 Minecraft 适配器，通过鹊桥协议与本插件互通
+- [鹊桥项目](https://github.com/17TheWord/QueQiao) — 鹊桥协议官方实现
 
 ## 📄 License
 
