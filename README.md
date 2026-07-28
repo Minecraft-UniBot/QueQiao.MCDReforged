@@ -1,16 +1,19 @@
 # QueQiao MCDR
 
 <p align="center">
-  <strong>鹊桥 V2 协议对接 MCDReforged 插件</strong>
+  <strong>鹊桥 V2 协议对接 MCDReforged 插件</strong><br>
+  <em>A MCDReforged plugin bridging the QueQiao V2 protocol</em>
 </p>
 <p align="center">
-  <a href="https://github.com/Minecraft_UniBot/MCDReforged/releases"><img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue"></a>
+  <a href="https://github.com/Minecraft-UniBot/QueQiao.MCDReforged/releases"><img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue"></a>
   <a href="https://docs.mcdreforged.com/"><img alt="MCDR" src="https://img.shields.io/badge/MCDReforged-%3E%3D2.15.0-orange"></a>
   <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/Python-%3E%3D3.12-green"></a>
   <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-lightgrey"></a>
 </p>
 
 > 基于 MCDReforged 的鹊桥 V2 协议端，支持**正向 WebSocket（客户端）**与**反向 WebSocket（服务端）**两种连接方式，实现 Minecraft 服务端与外部系统（如 NoneBot / 鹊桥服务端）的实时消息互通。
+>
+> A QueQiao V2 protocol endpoint based on MCDReforged, supporting both **forward WebSocket (client)** and **reverse WebSocket (server)** connection modes for real-time message exchange between a Minecraft server and external systems (e.g. NoneBot / QueQiao server).
 
 ## ✨ 功能特性
 
@@ -40,11 +43,11 @@
 ## 📦 安装
 
 ### 方式一：直接下载 .mcdr 包
-从 [Releases](https://github.com/Minecraft_UniBot/MCDReforged/releases) 下载 `queqiao-vX.X.X.mcdr`，放入 MCDR 的 `plugins/` 目录即可。
+从 [Releases](https://github.com/Minecraft-UniBot/QueQiao.MCDReforged/releases) 下载 `queqiao-vX.X.X.mcdr`，放入 MCDR 的 `plugins/` 目录即可。
 
 ### 方式二：源码安装
 ```bash
-git clone https://github.com/Minecraft_UniBot/MCDReforged.git
+git clone https://github.com/Minecraft-UniBot/QueQiao.MCDReforged.git
 cd MCDReforged
 uv sync
 ```
