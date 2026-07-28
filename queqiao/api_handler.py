@@ -9,6 +9,7 @@ from typing import Any
 from mcdreforged.api.all import PluginServerInterface
 
 from queqiao.config import Config
+from queqiao import server_status as server_status_module
 
 
 class ApiHandler:
@@ -112,7 +113,7 @@ class ApiHandler:
 			self.server.execute(f'title @a title {title_json}')
 		elif subtitle:
 			# 只有 subtitle 时，用空 title 触发显示
-			self.server.execute('title @a title {'text':''}')
+			self.server.execute('title @a title {"text": ""}')
 
 		return self._response(200, 'send_title', 'SUCCESS', 'success', echo=echo)
 
@@ -136,27 +137,61 @@ class ApiHandler:
 		return self._response(200, 'send_rcon_command', 'SUCCESS', 'success', data=result, echo=echo)
 
 	def _api_get_status(self, data: dict, echo: str) -> dict:
-		'''获取服务器状态'''
+		'''
+		获取服务器状态（严格对齐 QueQiao V2 协议 get_status 返回格式）
+		返回 data 字段：
+		  - timestamp
+		  - server_type / server_version
+		  - server_list_ping: {available, host, port, players{max, online}, ...}
+		  - cpu_information: {cpu_cores, load_average, system_load, process_load}
+		  - memory_information: {physical_memory{...}, jvm_memory{...}}
+		'''
 		status_data: dict[str, Any] = {
 			'timestamp': int(time.time() * 1000),
 		}
 
+		# 服务器基础信息
 		try:
 			info = self.server.get_server_information()
-			status_data['server_type'] = getattr(info, 'brand', 'unknown')
-			status_data['server_version'] = getattr(info, 'version', 'unknown')
+			status_data['server_type'] = 'mcdr'
+			status_data['server_version'] = getattr(info, 'version', None)
 		except Exception:
-			pass
+			status_data['server_type'] = 'mcdr'
+			status_data['server_version'] = None
 
+		# server_list_ping（MCDR 端无法做真实 ping，用已知信息填充）
 		try:
-			get_names = getattr(self.server, 'get_online_player_names', None)
-			if get_names:
-				names = get_names()
-				status_data['players'] = {
-					'online': len(names),
-					'list': list(names),
-				}
+			info = self.server.get_server_information()
+			players = server_status_module.get_online_players(self.server)
+			status_data['server_list_ping'] = {
+				'available': self.server.is_server_running(),
+				'host': getattr(info, 'ip', None),
+				'port': getattr(info, 'port', None),
+				'reason': 'ok' if self.server.is_server_running() else 'server not running',
+				'error': None,
+				'players': {
+					'max': -1,  # MCDR 端无法获取最大玩家数
+					'online': len(players),
+				},
+				'description': None,
+				'favicon': None,
+			}
 		except Exception:
-			pass
+			status_data['server_list_ping'] = {
+				'available': False,
+				'players': {'max': -1, 'online': 0},
+			}
+
+		# CPU 信息
+		try:
+			status_data['cpu_information'] = server_status_module.get_cpu_information(self.server)
+		except Exception as e:
+			self.server.logger.debug(f'[QueQiao] CPU 信息采集失败: {e}')
+
+		# 内存信息
+		try:
+			status_data['memory_information'] = server_status_module.get_memory_information(self.server)
+		except Exception as e:
+			self.server.logger.debug(f'[QueQiao] 内存信息采集失败: {e}')
 
 		return self._response(200, 'get_status', 'SUCCESS', 'success', data=status_data, echo=echo)

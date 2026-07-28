@@ -189,7 +189,7 @@ class QueQiaoConnection:
 		# 校验 server_name
 		if self_name != self.config.server_name:
 			self.server.logger.warning(
-				f'[QueQiao] 客户端 server_name 不匹配: '{self_name}' != '{self.config.server_name}'，拒绝连接'
+				f'[QueQiao] 客户端 server_name 不匹配: "{self_name}" != "{self.config.server_name}"，拒绝连接'
 			)
 			await ws.close(4001, 'server_name mismatch')
 			return

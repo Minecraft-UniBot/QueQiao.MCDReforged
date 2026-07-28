@@ -7,6 +7,7 @@ from mcdreforged.api.all import (
 	CommandSource,
 	Literal,
 	RTextList,
+	MCDRPluginEvents,
 )
 from typing import Any, Optional
 
@@ -79,6 +80,16 @@ def _register_commands(server: PluginServerInterface):
 	server.register_command(node)
 
 
+def _reply_lines(source: CommandSource, lines: list):
+	'''多行输出，每行之间自动换行'''
+	items = []
+	for line in lines:
+		if items:
+			items.append('\n')
+		items.append(line)
+	source.reply(RTextList(*items))
+
+
 def _show_help(source: CommandSource):
 	'''显示帮助信息'''
 	server = source.get_server()
@@ -87,7 +98,7 @@ def _show_help(source: CommandSource):
 		server.tr('queqiao_mcdr.help.status'),
 		server.tr('queqiao_mcdr.help.reload'),
 	]
-	source.reply(RTextList(*lines))
+	_reply_lines(source, lines)
 
 
 def _show_status(source: CommandSource):
@@ -111,17 +122,25 @@ def _show_status(source: CommandSource):
 	client_status = '已连接' if conn.is_client_connected else '未连接'
 	server_status = f'{conn.server_client_count} 个客户端'
 
-	# 玩家数（由 GameEventForwarder 自行维护）
-	player_count = 0
-	if plugin_game_events is not None:
-		player_count = len(plugin_game_events.online_players)
+	# 玩家数（通过 online_player_api 插件获取）
+	player_count = server_status_module.get_player_count(server)
 
-	# CPU 与内存（基于 psutil 采集服务器进程）
-	cpu_percent = server_status_module.get_cpu_percent(server, interval=0.0)
-	rss_mb, vms_mb = server_status_module.get_memory_info(server)
+	# CPU 与内存（基于 psutil 采集服务器进程，对齐 QueQiao V2 协议）
+	cpu_info = server_status_module.get_cpu_information(server)
+	mem_info = server_status_module.get_memory_information(server)
 
-	cpu_str = f'{cpu_percent:.1f}%' if cpu_percent is not None else 'N/A'
-	mem_str = f'{rss_mb:.1f} MB' if rss_mb is not None else 'N/A'
+	# CPU 显示：优先进程占用，回退系统占用
+	process_load = cpu_info.get('process_load', 0.0)
+	system_load = cpu_info.get('system_load', 0.0)
+	cpu_str = f'{process_load:.1f}%' if process_load else f'{system_load:.1f}%'
+
+	# 内存显示：物理内存 + 进程内存
+	physical = mem_info.get('physical_memory', {})
+	jvm = mem_info.get('jvm_memory', {})
+	used_mb = (physical.get('used', 0) or 0) / (1024 * 1024)
+	total_mb = (physical.get('total', 0) or 0) / (1024 * 1024)
+	percentage = physical.get('percentage', 0.0)
+	mem_str = f'{used_mb:.0f} / {total_mb:.0f} MB ({percentage:.1f}%)'
 
 	lines = [
 		server.tr('queqiao_mcdr.status.title'),
@@ -133,7 +152,7 @@ def _show_status(source: CommandSource):
 		server.tr('queqiao_mcdr.status.cpu', cpu_str),
 		server.tr('queqiao_mcdr.status.memory', mem_str),
 	]
-	source.reply(RTextList(*lines))
+	_reply_lines(source, lines)
 
 
 def _init_components(server: PluginServerInterface, conn: QueQiaoConnection):
@@ -145,6 +164,15 @@ def _init_components(server: PluginServerInterface, conn: QueQiaoConnection):
 
 	plugin_game_events = GameEventForwarder(server, conn.config, conn)
 	plugin_game_events.register()
+
+	# 服务器启动/停止时重置 CPU 采样缓存（进程已变更，旧缓存失效）
+	server.register_event_listener(MCDRPluginEvents.SERVER_STARTUP, _on_server_state_change)
+	server.register_event_listener(MCDRPluginEvents.SERVER_STOP, _on_server_state_change)
+
+
+def _on_server_state_change(server: PluginServerInterface, *args, **kwargs):
+	'''服务器启动/停止时清理 CPU 采样缓存'''
+	server_status_module.reset_cpu_cache()
 
 
 def _reload(source: CommandSource):

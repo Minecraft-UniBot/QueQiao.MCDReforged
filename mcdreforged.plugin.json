@@ -10,7 +10,8 @@
 	"dependencies": {
 		"mcdreforged": ">=2.15.0",
 		"mg_events": "*",
-		"minecraft_data_api": "*"
+		"minecraft_data_api": "*",
+		"online_player_api": "*"
 	},
 	"resources": [
 		"lang"
