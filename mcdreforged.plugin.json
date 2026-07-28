@@ -1,7 +1,7 @@
 {
 	"id": "queqiao",
 	"version": "1.0.0",
-	"name": "QueQiao MCDR",
+	"name": "QueQiao",
 	"description": "鹊桥 V2 协议对接插件，支持正向/反向 WebSocket 连接，实现 Minecraft 与外部系统消息互通",
 	"author": [
 		"LonelySail"

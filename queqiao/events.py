@@ -42,9 +42,6 @@ class GameEventForwarder:
         self.server.register_event_listener('PlayerDeathEvent', self._on_player_death)
         self.server.register_event_listener('PlayerAdvancementEvent', self._on_player_advancement)
 
-    def _send(self, event: dict):
-        '''发送事件到鹊桥连接'''
-
     # ==================== MCDR 内置事件 ====================
 
     def _on_player_joined(self, server: PluginServerInterface, player: str, info):

@@ -137,3 +137,4 @@ dmypy.json
 # 隐藏文件
 .*/
 uv.lock
+!.github
