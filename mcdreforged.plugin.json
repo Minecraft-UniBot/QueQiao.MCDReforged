@@ -1,17 +1,18 @@
 {
-    "id": "my_plugin",
-    "version": "1.0.0",
-    "name": "My Plugin",
-    "description": "This description is a description to your plugin",
-    "author": [
-        "You"
-    ],
-    "link": "https://github.com/MCDReforged/PluginTemplate",
-    "dependencies": {
-        "mcdreforged": ">=2.15.0"
-    },
-
-    "resources": [
-        "lang"
-    ]
+	"id": "queqiao",
+	"version": "1.0.0",
+	"name": "QueQiao MCDR",
+	"description": "鹊桥 V2 协议对接插件，支持正向/反向 WebSocket 连接，实现 Minecraft 与外部系统消息互通",
+	"author": [
+		"LonelySail"
+	],
+	"link": "https://github.com/Minecraft_UniBot/MCDReforged",
+	"dependencies": {
+		"mcdreforged": ">=2.15.0",
+		"mg_events": "*",
+		"minecraft_data_api": "*"
+	},
+	"resources": [
+		"lang"
+	]
 }

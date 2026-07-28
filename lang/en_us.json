@@ -1,3 +1,19 @@
 {
-    "my_plugin.a_message": "Hello world from my plugin!"
+	"queqiao_mcdr.help": "§eQueQiao MCDR §7- QueQiao V2 Protocol Bridge",
+	"queqiao_mcdr.help.status": "§7!!queqiao status §8- §fView connection status",
+	"queqiao_mcdr.help.reload": "§7!!queqiao reload §8- §fReload config and reconnect",
+	"queqiao_mcdr.connected": "§aConnected to QueQiao server: {}",
+	"queqiao_mcdr.disconnected": "§cDisconnected from QueQiao server: {}",
+	"queqiao_mcdr.connect_failed": "§cFailed to connect to QueQiao server: {}",
+	"queqiao_mcdr.client_connected": "§aQueQiao client connected: {}",
+	"queqiao_mcdr.client_disconnected": "§cQueQiao client disconnected: {}",
+	"queqiao_mcdr.config_reloaded": "§aConfig reloaded",
+	"queqiao_mcdr.status.title": "§6===== QueQiao Status =====",
+	"queqiao_mcdr.status.mode": "§7Mode: §f{}",
+	"queqiao_mcdr.status.client": "§7Client: §f{}",
+	"queqiao_mcdr.status.server": "§7Server: §f{}",
+	"queqiao_mcdr.status.server_name": "§7Server Name: §f{}",
+	"queqiao_mcdr.status.players": "§7Players: §f{}",
+	"queqiao_mcdr.status.cpu": "§7CPU: §f{}",
+	"queqiao_mcdr.status.memory": "§7Memory: §f{}"
 }

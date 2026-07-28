@@ -1,0 +1,19 @@
+{
+	"queqiao_mcdr.help": "§eQueQiao MCDR §7- 鹊桥 V2 协议对接插件",
+	"queqiao_mcdr.help.status": "§7!!queqiao status §8- §f查看连接状态",
+	"queqiao_mcdr.help.reload": "§7!!queqiao reload §8- §f重载配置并重新连接",
+	"queqiao_mcdr.connected": "§a已连接到鹊桥服务端: {}",
+	"queqiao_mcdr.disconnected": "§c与鹊桥服务端断开连接: {}",
+	"queqiao_mcdr.connect_failed": "§c连接鹊桥服务端失败: {}",
+	"queqiao_mcdr.client_connected": "§a鹊桥客户端已连接: {}",
+	"queqiao_mcdr.client_disconnected": "§c鹊桥客户端已断开: {}",
+	"queqiao_mcdr.config_reloaded": "§a配置已重载",
+	"queqiao_mcdr.status.title": "§6===== QueQiao 状态 =====",
+	"queqiao_mcdr.status.mode": "§7模式: §f{}",
+	"queqiao_mcdr.status.client": "§7客户端连接: §f{}",
+	"queqiao_mcdr.status.server": "§7服务端监听: §f{}",
+	"queqiao_mcdr.status.server_name": "§7服务器名: §f{}",
+	"queqiao_mcdr.status.players": "§7在线玩家: §f{}",
+	"queqiao_mcdr.status.cpu": "§7CPU 占用: §f{}",
+	"queqiao_mcdr.status.memory": "§7内存占用: §f{}"
+}

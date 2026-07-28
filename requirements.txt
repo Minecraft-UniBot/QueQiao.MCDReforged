@@ -1,1 +1,3 @@
-# Add your python package requirements here, just like regular requirements.txt
+websockets>=12.0
+PyYAML>=6.0
+psutil>=5.9

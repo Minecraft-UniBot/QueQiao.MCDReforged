@@ -1,0 +1,16 @@
+[project]
+name = "queqiao.mcdreforged"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mcdreforged>=2.15.7",
+    "psutil>=5.9.0",
+    "pyyaml>=6.0.3",
+    "websockets>=16.1.1",
+]
+
+[[tool.uv.index]]
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+default = true
