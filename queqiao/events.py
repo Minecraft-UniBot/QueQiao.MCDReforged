@@ -46,12 +46,13 @@ class GameEventForwarder:
 
     def _on_player_joined(self, server: PluginServerInterface, player: str, info):
         '''玩家加入事件 - MCDR 派发参数 (server, player, info)'''
-        self.server.logger.debug('监测到玩家加入！转发给鹊桥连接……')
+        self.server.logger.info('监测到玩家加入！转发给鹊桥连接……')
         self.online_players.add(player)
         self.connection.send_event(self.builder.player_join(player))
 
     def _on_player_left(self, server: PluginServerInterface, player: str):
         '''玩家离开事件 - MCDR 派发参数 (server, player)'''
+        self.server.logger.info('监测到玩家离开！转发给鹊桥连接……')
         self.online_players.discard(player)
         self.connection.send_event(self.builder.player_quit(player))
 
@@ -60,6 +61,7 @@ class GameEventForwarder:
         用户消息事件 - MCDR 派发参数 (server, info)
         仅处理玩家（is_user=True）发送的消息，区分聊天与命令
         '''
+        self.server.logger.info('监测到玩家消息！转发给鹊桥连接……')
         if not info.is_user or info.player is None or info.content is None:
             return
         player = info.player
@@ -68,18 +70,20 @@ class GameEventForwarder:
             # 命令消息：去掉前导 '/'
             command = raw[1:]
             self.connection.send_event(self.builder.player_command(player, raw_message=raw, command=command))
-        else:
-            self.connection.send_event(self.builder.player_chat(player, raw_message=raw, message=raw))
+            return
+        self.connection.send_event(self.builder.player_chat(player, raw_message=raw, message=raw))
 
     # ==================== MoreGameEvents 事件 ====================
 
     def _on_player_death(self, server: PluginServerInterface, player: str, event_type: str, content: list):
         '''玩家死亡事件 - 来自 MoreGameEvents'''
+        self.server.logger.info('监测到玩家死亡！转发给鹊桥连接……')
         death_text = _first_attr(content[0], 'raw') if content else None
         self.connection.send_event(self.builder.player_death(player, death_text=death_text))
 
     def _on_player_advancement(self, server: PluginServerInterface, player: str, event_type: str, content: list):
         '''玩家成就事件 - 来自 MoreGameEvents'''
+        self.server.logger.info('监测到玩家获得成就！转发给鹊桥连接……')
         item = content[0] if content else None
         ach_key = _first_attr(item, 'advancement') if item else None
         ach_text = _first_attr(item, 'raw') if item else None
