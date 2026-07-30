@@ -1,12 +1,12 @@
 {
 	"id": "queqiao",
-	"version": "1.0.0",
+	"version": "v1.0.1",
 	"name": "QueQiao",
 	"description": {
 		"en_us": "QueQiao V2 protocol bridge plugin supporting forward/reverse WebSocket connections for message exchange between Minecraft and external systems",
 		"zh_cn": "鹊桥 V2 协议对接插件，支持正向/反向 WebSocket 连接，实现 Minecraft 与外部系统消息互通"
 	},
-	"author": [
+	"authors": [
 		{
 			"name": "LonelySail",
 			"link": "https://github.com/Lonely-Sails"

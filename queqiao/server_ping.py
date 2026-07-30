@@ -244,7 +244,7 @@ def server_list_ping(host: str, port: int, timeout: float = 5.0) -> dict:
 # MOTD 不常变化，缓存一段时间避免每次 get_status 都 TCP 连接
 
 _ping_cache: dict = {}  # key -> {data, expire_at}
-_PING_CACHE_TTL = 30.0  # 缓存 30 秒
+_PING_CACHE_TTL = 60.0  # 缓存 60 秒
 
 
 def get_server_list_ping(
@@ -255,7 +255,7 @@ def get_server_list_ping(
 ) -> dict:
     '''
     获取服务器 Server List Ping 结果。
-    优先使用缓存（TTL 30s），缓存失效或 use_cache=False 时重新 ping。
+    优先使用缓存（TTL 60s），缓存失效或 use_cache=False 时重新 ping。
 
     服务器地址来源（按优先级）:
       1. 参数 host/port（非空时优先）

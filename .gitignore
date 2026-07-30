@@ -138,3 +138,5 @@ dmypy.json
 .*/
 uv.lock
 !.github
+.DS_Store
+**/.DS_Store
