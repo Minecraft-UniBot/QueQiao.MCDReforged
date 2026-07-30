@@ -1,6 +1,6 @@
 {
 	"id": "queqiao",
-	"version": "v1.0.1",
+	"version": "1.0.1",
 	"name": "QueQiao",
 	"description": {
 		"en_us": "QueQiao V2 protocol bridge plugin supporting forward/reverse WebSocket connections for message exchange between Minecraft and external systems",
